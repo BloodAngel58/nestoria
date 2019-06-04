@@ -48,7 +48,6 @@ function addItem(
   const divPrice_formatted = document.createElement("div");
   const textTitle = document.createElement("h3");
   const textKeywords = document.createElement("h4");
-
   //
   const divContent = document.createElement("div"); // div для инфы
   const todoItem = document.createElement("div"); //Родитель
@@ -100,12 +99,3 @@ function loadItem(itemList) {
     );
   }
 }
-/*
-construction_year;
-img_url;
-//keywords;
-price_formatted;
-room_number;
-bedroom_number
-summary;
-*/
