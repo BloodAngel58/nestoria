@@ -31,6 +31,7 @@ function searchData(url) {
 }
 
 function addItem(
+  key,
   img_url,
   summary,
   construction_year,
@@ -40,6 +41,7 @@ function addItem(
   title,
   keywords
 ) {
+  const MoreDetailedButton = document.createElement("button");
   const divImg = document.createElement("img");
   const divSummary = document.createElement("div");
   const divConstruction_year = document.createElement("div");
@@ -60,7 +62,9 @@ function addItem(
   divPrice_formatted.innerHTML = "Цена :" + price_formatted;
   textTitle.innerHTML = title;
   textKeywords.innerHTML = keywords;
+  MoreDetailedButton.innerHTML = "More Detaile";
   //
+  MoreDetailedButton.classList.add("more-detaile__button");
   divContent.classList.add("loaded-text__content");
   divImg.classList.add("loaded-img__item");
   todoItem.classList.add("loaded-itemList__search");
@@ -72,6 +76,8 @@ function addItem(
   divPrice_formatted.classList.add("loaded-text-content__item");
   divSummary.classList.add("loaded-text-content__item");
   //
+  todoItem.setAttribute("key", key);
+  //
   todoItem.appendChild(divImg);
   divContent.appendChild(textTitle);
   divContent.appendChild(textKeywords);
@@ -80,14 +86,15 @@ function addItem(
   divContent.appendChild(divRoom_number);
   divContent.appendChild(divBedroom_number);
   divContent.appendChild(divPrice_formatted);
-
   //родители
   todoItem.appendChild(divContent);
+  todoItem.appendChild(MoreDetailedButton);
   listItem.appendChild(todoItem);
 }
 function loadItem(itemList) {
   for (let key = 0; key < itemList.length; key++) {
     addItem(
+      key,
       itemList[key].img_url,
       itemList[key].summary,
       itemList[key].construction_year,
@@ -98,4 +105,25 @@ function loadItem(itemList) {
       itemList[key].keywords
     );
   }
+}
+
+function updatCheck(event) {
+  const target = event.target;
+  if (target.type == "checkbox") {
+    if (target.checked) {
+      target.parentNode.classList.add("todo-item__checked");
+    } else {
+      target.parentNode.classList.remove("todo-item__checked");
+    }
+  }
+  let key = target.parentNode.getAttribute("key");
+
+  if (target.type == "submit") {
+    deleteTasks(event.target.parentNode, key);
+  }
+}
+
+function deleteTasks(node, key) {
+  node.remove();
+  todoList.splice(todoList.findIndex(item => item.idTask === key), 1);
 }

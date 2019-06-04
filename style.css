@@ -1,6 +1,6 @@
 body {
     background-color: #DCDCDC;
-    width: 60%;
+    width: 70%;
     margin: 0 auto;
 }
 
@@ -28,8 +28,24 @@ body {
     border: 5px solid black;
     padding: 10px;
     margin: 10px;
+    justify-content: space-between;
 
 }
+
+.loaded-itemList__search img {
+    flex: 1 1 30%
+}
+
+.loaded-itemList__search div {
+    flex: 2 1 60%
+}
+
+.loaded-itemList__search button {
+    flex: 1 1 10%;
+    align-self: flex-end
+}
+
+
 
 .loaded-img__item {
     margin: 10px;
@@ -47,6 +63,7 @@ body {
     flex-direction: column;
     margin: 10px;
     padding: 0;
+
 }
 
 .loaded-text-content__item {
@@ -54,3 +71,5 @@ body {
     padding: 0;
     margin: 5px;
 }
+
+.more-detaile__button {}
