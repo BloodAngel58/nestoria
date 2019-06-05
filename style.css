@@ -1,7 +1,22 @@
 body {
     background-color: #DCDCDC;
-    width: 70%;
+    width: 80%;
     margin: 0 auto;
+}
+
+h3 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+h4 {
+    margin-top: 5px;
+    margin-bottom: 5px;
+}
+
+h5 {
+    margin-top: 5px;
+    margin-bottom: 5px;
 }
 
 .input-text__search {
@@ -45,8 +60,6 @@ body {
     align-self: flex-end
 }
 
-
-
 .loaded-img__item {
     margin: 10px;
     padding: 0;
@@ -72,4 +85,118 @@ body {
     margin: 5px;
 }
 
-.more-detaile__button {}
+.close {
+    color: #aaa;
+    float: rigth;
+    font-size: 28px;
+    font-weight: bold;
+}
+
+.modal {
+    display: flex;
+    z-index: 20;
+    left: 0;
+    top: 0;
+    overflow: auto;
+    background-color: blueviolet;
+    flex-direction: row;
+    border: 1px solid #000;
+    justify-content: space-between;
+}
+
+
+.modal-content {
+    display: flex;
+    flex-direction: column;
+    margin: 10px;
+    padding: 10px;
+    background-color: #c2c2c2;
+    border: 1px solid #000;
+
+}
+
+.modal-img__item {
+    margin: 10px;
+    padding: 0;
+    width: 200px;
+    height: 200px;
+    position: relative;
+    background: #c2c2c2;
+    border: 1px solid #000;
+    border-radius: 3px;
+}
+
+.modal img {
+    flex: 1 1 30%
+}
+
+.modal.modal-content {
+    flex: 2 1 70%
+}
+
+.modal button {
+    margin: 10px;
+    padding: 0;
+    flex: 1 1 10%;
+    align-self: flex-start;
+}
+
+.modal-window {
+    position: fixed;
+    top: 0;
+    left: 0;
+    background: rgba(0, 0, 0, 0.65);
+    display: none;
+    overflow: auto;
+    width: 100%;
+    height: 100%;
+    z-index: 1000;
+}
+
+.modal {
+    display: flex;
+    overflow: auto;
+    background-color: blueviolet;
+    flex-direction: row;
+    border: 1px solid #000;
+    justify-content: space-between;
+
+
+}
+
+.exit-button {
+    width: 30px;
+    height: 30px;
+}
+
+.favorit-button {
+    width: 130px;
+    height: 130px;
+    margin: 20px;
+    align-self: flex-end;
+}
+
+.list {
+    display: flex;
+    justify-content: space-around;
+    padding: 0;
+    margin: 10px;
+    flex-direction: row;
+}
+
+.list-favorits {
+    padding: 0;
+    margin: 10px;
+}
+
+.list #listItem {
+    flex: 3 1 60%
+}
+
+.list #listfavorits {
+    flex: 2 1 40%
+}
+
+.storage-Favorits {
+    border: 1px solid #000;
+}
