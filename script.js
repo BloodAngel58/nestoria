@@ -68,8 +68,8 @@ function loadFavorit() {
     drawingFavorit(
       key,
       arrFavorit[key].img_url,
-      arrFavorit[key].price_formatted,
-      arrFavorit[key].title
+      arrFavorit[key].title,
+      arrFavorit[key].price_formatted
     );
   }
 }
@@ -86,6 +86,9 @@ function drawingFavorit(key, img_url, title, price_formatted) {
   divPrice_formatted.innerHTML = "Цена :" + price_formatted;
   ///
   todoItem.setAttribute("key", key);
+  //
+  todoItem.classList.add("item-storage__Favorits");
+  //
   ///
   divContent.appendChild(textTitle);
   divContent.appendChild(divPrice_formatted);
@@ -177,6 +180,7 @@ function addModalItem(item, key) {
   ////
   divContent.classList.add("modal-content");
   modalImg.classList.add("modal-img__item");
+  exitButton.classList.add("modal-exit__button");
   addToFavoritesButton.classList.add("favorit-button");
   ////
   divContent.setAttribute("key", key);

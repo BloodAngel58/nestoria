@@ -93,6 +93,7 @@ h5 {
 }
 
 .modal {
+    margin: auto;
     display: flex;
     z-index: 20;
     left: 0;
@@ -118,8 +119,8 @@ h5 {
 .modal-img__item {
     margin: 10px;
     padding: 0;
-    width: 200px;
-    height: 200px;
+    width: 400px;
+    height: 400px;
     position: relative;
     background: #c2c2c2;
     border: 1px solid #000;
@@ -134,11 +135,11 @@ h5 {
     flex: 2 1 70%
 }
 
-.modal button {
-    margin: 10px;
-    padding: 0;
+.modal.modal-exit__button {
+    width: 30px;
+    height: 30px;
     flex: 1 1 10%;
-    align-self: flex-start;
+    align-self: flex-end
 }
 
 .modal-window {
@@ -171,9 +172,8 @@ h5 {
 
 .favorit-button {
     width: 130px;
-    height: 130px;
-    margin: 20px;
-    align-self: flex-end;
+    margin: 0;
+    align-self: flex-start;
 }
 
 .list {
@@ -187,6 +187,7 @@ h5 {
 .list-favorits {
     padding: 0;
     margin: 10px;
+    border: 1px solid #000;
 }
 
 .list #listItem {
@@ -197,6 +198,22 @@ h5 {
     flex: 2 1 40%
 }
 
-.storage-Favorits {
-    border: 1px solid #000;
+
+.item-storage__Favorits {
+    flex-direction: row;
+    display: flex;
+    padding: 10px;
+    margin: 10px;
+    justify-content: space-between;
+
+}
+
+.item-storage__Favorits img {
+    margin: 10px;
+    padding: 0;
+    width: 100px;
+    height: 100px;
+    position: relative;
+    background: #c2c2c2;
+    border-radius: 3px;
 }
