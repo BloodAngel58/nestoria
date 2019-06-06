@@ -6,11 +6,14 @@ const url =
 document.getElementById("listItem").addEventListener("click", updatCheck, true);
 document.getElementById("buttonSearch").addEventListener("click", loadingData);
 document.getElementById("myModal").addEventListener("click", deletetCheck);
+document.getElementById("favorits").addEventListener("click", deletetFavorit);
+document.getElementById("favorits").addEventListener("click", loadFavoritItem);
 const inputTextSearch = document.getElementById("inputText");
 const listItem = document.getElementById("listItem");
 const modalItem = document.getElementById("myModal");
 const modalWindow = document.getElementById("md-w");
 const favorits = document.getElementById("favorits");
+
 function loadingData() {
   let textSearch = inputTextSearch.value;
   if (inputTextSearch.value) {
@@ -18,15 +21,16 @@ function loadingData() {
     searchData(finalUrl);
   } else alert("Вы не ввели данные для поиска");
 }
+
 function searchData(url) {
   fetch(url, {
-    method: "GET",
-    headers: "Access-Control-Allow-Origin",
-    headers: {
-      "content-type": "application/json"
-    },
-    mode: "cors"
-  })
+      method: "GET",
+      headers: "Access-Control-Allow-Origin",
+      headers: {
+        "content-type": "application/json"
+      },
+      mode: "cors"
+    })
     .then(res => res.json())
     .then(res => {
       arr = res.response.listings.slice();
@@ -43,6 +47,30 @@ function updatCheck(event) {
     addModalItem(arr[key], key);
   }
 }
+
+function loadFavoritItem(event) {
+  const target = event.target;
+  let key = target.parentNode.getAttribute("key");
+  console.log(key);
+  console.log(target.tagName);
+  if (target.tagName == 'IMG') {
+    addModalItem(arrFavorit[key], key);
+    document.querySelector(".favorit-button").classList.add("close__button");
+  }
+}
+
+function deletetFavorit(event) {
+  const target = event.target;
+  if (target.type == "reset") {
+    let key = target.parentNode.getAttribute("key");
+    arrFavorit.splice(key, 1);
+    favorits.innerHTML = "";
+    loadFavorit();
+
+  }
+}
+
+
 function deletetCheck(event) {
   const target = event.target;
   console.log(target.type);
@@ -53,8 +81,12 @@ function deletetCheck(event) {
   if (target.type == "submit") {
     let key = target.parentNode.getAttribute("key");
     addToFavorit(key);
+
   }
 }
+
+
+
 function addToFavorit(key) {
   const obj = arr[key];
   if (!arrFavorit.includes(obj)) {
@@ -63,6 +95,7 @@ function addToFavorit(key) {
     loadFavorit();
   }
 }
+
 function loadFavorit() {
   for (let key = 0; key < arrFavorit.length; key++) {
     drawingFavorit(
@@ -73,10 +106,12 @@ function loadFavorit() {
     );
   }
 }
+
 function drawingFavorit(key, img_url, title, price_formatted) {
   const divImg = document.createElement("img");
   const textTitle = document.createElement("h3");
   const divPrice_formatted = document.createElement("div");
+  const exitButton = document.createElement("button");
   //
   const divContent = document.createElement("div"); // div для инфы
   const todoItem = document.createElement("div"); //Родитель
@@ -84,9 +119,12 @@ function drawingFavorit(key, img_url, title, price_formatted) {
   divImg.src = img_url;
   textTitle.innerHTML = title;
   divPrice_formatted.innerHTML = "Цена :" + price_formatted;
+  exitButton.type = "reset";
+  exitButton.innerHTML = "&#10006";
   ///
   todoItem.setAttribute("key", key);
   //
+  exitButton.classList.add("favorit-exit__button");
   todoItem.classList.add("item-storage__Favorits");
   //
   ///
@@ -94,6 +132,7 @@ function drawingFavorit(key, img_url, title, price_formatted) {
   divContent.appendChild(divPrice_formatted);
   todoItem.appendChild(divImg);
   todoItem.appendChild(divContent);
+  todoItem.appendChild(exitButton);
   favorits.appendChild(todoItem);
 }
 
@@ -186,8 +225,8 @@ function addModalItem(item, key) {
   divContent.setAttribute("key", key);
   //
   divContent.appendChild(modalTextTitle);
-  divContent.appendChild(modalLister_name);
   divContent.appendChild(modalTextKeywords);
+  divContent.appendChild(modalLister_name);
   divContent.appendChild(modalSummary);
   divContent.appendChild(modalBedroom_number);
   divContent.appendChild(modalProperty_type);
@@ -198,3 +237,4 @@ function addModalItem(item, key) {
   modalItem.appendChild(divContent);
   modalItem.appendChild(exitButton);
 }
+//background-color: rgba(101, 172, 20, 0.65);
