@@ -43,7 +43,6 @@ function updatCheck(event) {
   const target = event.target;
   if (target.type == "submit") {
     let key = target.parentNode.getAttribute("key");
-    console.log(key);
     addModalItem(arr[key], key);
   }
 }
@@ -51,8 +50,6 @@ function updatCheck(event) {
 function loadFavoritItem(event) {
   const target = event.target;
   let key = target.parentNode.getAttribute("key");
-  console.log(key);
-  console.log(target.tagName);
   if (target.tagName == 'IMG') {
     addModalItem(arrFavorit[key], key);
     document.querySelector(".favorit-button").classList.add("close__button");
@@ -66,14 +63,12 @@ function deletetFavorit(event) {
     arrFavorit.splice(key, 1);
     favorits.innerHTML = "";
     loadFavorit();
-
   }
 }
 
 
 function deletetCheck(event) {
   const target = event.target;
-  console.log(target.type);
   if (target.type == "reset") {
     modalWindow.style.display = "none";
     target.parentNode.innerHTML = "";
@@ -81,11 +76,8 @@ function deletetCheck(event) {
   if (target.type == "submit") {
     let key = target.parentNode.getAttribute("key");
     addToFavorit(key);
-
   }
 }
-
-
 
 function addToFavorit(key) {
   const obj = arr[key];
