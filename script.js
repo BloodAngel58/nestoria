@@ -8,11 +8,25 @@ document.getElementById("buttonSearch").addEventListener("click", loadingData);
 document.getElementById("myModal").addEventListener("click", deletetCheck);
 document.getElementById("favorits").addEventListener("click", deletetFavorit);
 document.getElementById("favorits").addEventListener("click", loadFavoritItem);
+document.getElementById("main").addEventListener("click", updateRario);
+
 const inputTextSearch = document.getElementById("inputText");
 const listItem = document.getElementById("listItem");
 const modalItem = document.getElementById("myModal");
 const modalWindow = document.getElementById("md-w");
 const favorits = document.getElementById("favorits");
+const listFavorits = document.getElementById("listfavorits");
+
+function updateRario(event) {
+
+  const target = event.target;
+  if (target.value == "Search") {
+    listFavorits.classList.add("close-radio");
+  } else listFavorits.classList.remove("close-radio");
+  if (target.value == "favorits") {
+    listItem.classList.add("close-radio");
+  } else listItem.classList.remove("close-radio");
+}
 
 function loadingData() {
   let textSearch = inputTextSearch.value;

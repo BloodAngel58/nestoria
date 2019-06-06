@@ -4,6 +4,18 @@
 <head>
     <meta charset="utf-8">
     <link rel="stylesheet" href="style.css">
+    <main class="main-checkbox" id="main">
+        <div>
+            <div>
+                <input id="main-checkbox_1" name="main-radio" class="l checkbox_1" type="radio" value="Search" checked>
+                <label for="main-checkbox_1">ПОИСК</label>
+            </div>
+            <div>
+                <input id="main-checkbox_2" name="main-radio" class="l checkbox_2" type="radio" value="favorits">
+                <label for="main-checkbox_2">ИЗБРАННОЕ</label>
+            </div>
+        </div>
+    </main>
 </head>
 
 <body>
@@ -13,10 +25,10 @@
     </div>
     <div class="list">
         <div id="listItem" class="listItem"></div>
-        <div id="listfavorits" class="list-favorits">
-            <h2>Favorits</h2>
-            <div id="favorits" class="storage-Favorits"></div>
-        </div>
+    </div>
+    <div id="listfavorits" class="list-favorits close-radio">
+        <h2>Favorits</h2>
+        <div id="favorits" class="storage-Favorits"></div>
     </div>
     <div class="modal-window" id="md-w">
         <div id="myModal" class="modal"></div>
