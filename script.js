@@ -1,14 +1,18 @@
 let arr = [];
+let arrList = []
 let arrFavorit = [];
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const url =
-  "https://api.nestoria.co.uk/api?encoding=json&pretty=1&action=search_listings&country=uk&listing_type=buy&place_name=";
+  "https://api.nestoria.co.uk/api?encoding=json&pretty=1&number_of_results=2&action=search_listings&country=uk&listing_type=buy&place_name=";
+let pagesCount = 1;
+
 document.getElementById("listItem").addEventListener("click", updatCheck, true);
 document.getElementById("buttonSearch").addEventListener("click", loadingData);
 document.getElementById("myModal").addEventListener("click", deletetCheck);
 document.getElementById("favorits").addEventListener("click", deletetFavorit);
 document.getElementById("favorits").addEventListener("click", loadFavoritItem);
 document.getElementById("main").addEventListener("click", updateRario);
+document.getElementById("showMoreButton").addEventListener("click", showMore);
 
 const inputTextSearch = document.getElementById("inputText");
 const listItem = document.getElementById("listItem");
@@ -16,6 +20,17 @@ const modalItem = document.getElementById("myModal");
 const modalWindow = document.getElementById("md-w");
 const favorits = document.getElementById("favorits");
 const listFavorits = document.getElementById("listfavorits");
+
+function showMore(event) {
+  event.preventDefault();
+  pagesCount++;
+  if (pagesCount) {
+    let pageNumber = "&page=" + pagesCount;
+    let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+    searchData(urlNewPage);
+  }
+  console.log(pagesCount);
+}
 
 function updateRario(event) {
 
@@ -48,7 +63,11 @@ function searchData(url) {
     .then(res => res.json())
     .then(res => {
       arr = res.response.listings.slice();
-      loadItem(arr);
+      arr.forEach(element => {
+        arrList.push(element);
+      })
+      listItem.innerHTML = "";
+      loadItem(arrList);
     })
     .catch(error => console.log(error));
 }
@@ -57,7 +76,7 @@ function updatCheck(event) {
   const target = event.target;
   if (target.type == "submit") {
     let key = target.parentNode.getAttribute("key");
-    addModalItem(arr[key], key);
+    addModalItem(arrList[key], key);
   }
 }
 
@@ -94,7 +113,7 @@ function deletetCheck(event) {
 }
 
 function addToFavorit(key) {
-  const obj = arr[key];
+  const obj = arrList[key];
   if (!arrFavorit.includes(obj)) {
     arrFavorit.push(obj);
     favorits.innerHTML = "";
@@ -183,6 +202,7 @@ function addItem(key, img_url, summary, price_formatted, title, keywords) {
 }
 
 function loadItem(itemList) {
+
   for (let key = 0; key < itemList.length; key++) {
     addItem(
       key,
@@ -243,4 +263,3 @@ function addModalItem(item, key) {
   modalItem.appendChild(divContent);
   modalItem.appendChild(exitButton);
 }
-//background-color: rgba(101, 172, 20, 0.65);
