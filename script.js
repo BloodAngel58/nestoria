@@ -243,4 +243,3 @@ function addModalItem(item, key) {
   modalItem.appendChild(divContent);
   modalItem.appendChild(exitButton);
 }
-//background-color: rgba(101, 172, 20, 0.65);
