@@ -3,7 +3,7 @@ let arrList = []
 let arrFavorit = [];
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const url =
-  "https://api.nestoria.co.uk/api?encoding=json&pretty=1&number_of_results=2&action=search_listings&country=uk&listing_type=buy&place_name=";
+  "https://api.nestoria.co.uk/api?encoding=json&pretty=1&action=search_listings&country=uk&listing_type=buy&place_name=";
 let pagesCount = 1;
 
 document.getElementById("listItem").addEventListener("click", updatCheck, true);
@@ -13,6 +13,8 @@ document.getElementById("favorits").addEventListener("click", deletetFavorit);
 document.getElementById("favorits").addEventListener("click", loadFavoritItem);
 document.getElementById("main").addEventListener("click", updateRario);
 document.getElementById("showMoreButton").addEventListener("click", showMore);
+document.getElementById("pagination").addEventListener("click", pagination)
+document.getElementById("paginatRadio").addEventListener("click", updatePagination);
 
 const inputTextSearch = document.getElementById("inputText");
 const listItem = document.getElementById("listItem");
@@ -21,6 +23,8 @@ const modalItem = document.getElementById("myModal");
 const modalWindow = document.getElementById("md-w");
 const favorits = document.getElementById("favorits");
 const listFavorits = document.getElementById("listfavorits");
+const showMoreButton = document.getElementById("showMoreButton")
+const paginationList = document.getElementById("pagination");
 
 function showMore(event) {
   event.preventDefault();
@@ -30,7 +34,17 @@ function showMore(event) {
     let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
     searchData(urlNewPage);
   }
-  console.log(pagesCount);
+}
+
+function pagination(event) {
+  const target = event.target;
+  if (target.innerHTML) {
+    let pageNumber = "&page=" + target.innerHTML;
+    let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+    arrList.length = 0;
+    searchData(urlNewPage);
+  }
+
 }
 
 function updateRario(event) {
@@ -42,6 +56,16 @@ function updateRario(event) {
   if (target.value == "favorits") {
     list.classList.add("close-radio");
   } else list.classList.remove("close-radio");
+}
+
+function updatePagination(event) {
+  const target = event.target;
+  if (target.value == "paginat") {
+    showMoreButton.classList.add("close-radio");
+  } else showMoreButton.classList.remove("close-radio");
+  if (target.value == "show") {
+    paginationList.classList.add("close-radio");
+  } else paginationList.classList.remove("close-radio");
 }
 
 function loadingData() {
@@ -265,3 +289,113 @@ function addModalItem(item, key) {
   modalItem.appendChild(divContent);
   modalItem.appendChild(exitButton);
 }
+
+const Pagination = {
+
+  code: '',
+
+  Extend: function (data) {
+    data = data || {};
+    Pagination.size = data.size || 300;
+    Pagination.page = data.page || 1;
+    Pagination.step = data.step || 3;
+  },
+
+  Add: function (s, f) {
+    for (var i = s; i < f; i++) {
+      Pagination.code += '<a>' + i + '</a>';
+    }
+  },
+
+  Last: function () {
+    Pagination.code += '<i>...</i><a>' + Pagination.size + '</a>';
+  },
+
+  First: function () {
+    Pagination.code += '<a>1</a><i>...</i>';
+  },
+
+  Click: function () {
+    Pagination.page = +this.innerHTML;
+    Pagination.Start();
+  },
+
+  // previous page
+  Prev: function () {
+    Pagination.page--;
+    if (Pagination.page < 1) {
+      Pagination.page = 1;
+    }
+    Pagination.Start();
+  },
+
+  // next page
+  Next: function () {
+    Pagination.page++;
+    if (Pagination.page > Pagination.size) {
+      Pagination.page = Pagination.size;
+    }
+    Pagination.Start();
+  },
+
+  Bind: function () {
+    var a = Pagination.e.getElementsByTagName('a');
+    for (var i = 0; i < a.length; i++) {
+      if (+a[i].innerHTML === Pagination.page) a[i].className = 'current';
+      a[i].addEventListener('click', Pagination.Click, false);
+    }
+  },
+
+  Finish: function () {
+    Pagination.e.innerHTML = Pagination.code;
+    Pagination.code = '';
+    Pagination.Bind();
+  },
+
+  Start: function () {
+    if (Pagination.size < Pagination.step * 2 + 6) {
+      Pagination.Add(1, Pagination.size + 1);
+    } else if (Pagination.page < Pagination.step * 2 + 1) {
+      Pagination.Add(1, Pagination.step * 2 + 4);
+      Pagination.Last();
+    } else if (Pagination.page > Pagination.size - Pagination.step * 2) {
+      Pagination.First();
+      Pagination.Add(Pagination.size - Pagination.step * 2 - 2, Pagination.size + 1);
+    } else {
+      Pagination.First();
+      Pagination.Add(Pagination.page - Pagination.step, Pagination.page + Pagination.step + 1);
+      Pagination.Last();
+    }
+    Pagination.Finish();
+  },
+  Buttons: function (e) {
+    var nav = e.getElementsByTagName('a');
+    nav[0].addEventListener('click', Pagination.Prev, false);
+    nav[1].addEventListener('click', Pagination.Next, false);
+  },
+  Create: function (e) {
+    var html = [
+      '<a>&#9668;</a>', // previous button
+      '<span></span>', // pagination container
+      '<a>&#9658;</a>' // next button
+    ];
+    e.innerHTML = html.join('');
+    Pagination.e = e.getElementsByTagName('span')[0];
+    Pagination.Buttons(e);
+  },
+
+  Init: function (e, data) {
+    Pagination.Extend(data);
+    Pagination.Create(e);
+    Pagination.Start();
+  }
+};
+
+var init = function () {
+  Pagination.Init(document.getElementById('pagination'), {
+    size: 50,
+    page: 1,
+    step: 3
+  });
+};
+document.addEventListener('DOMContentLoaded', init, false);

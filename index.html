@@ -23,9 +23,22 @@
         <input type="text" id="inputText" class="search-input__text" placeholder="New Text">
         <button id="buttonSearch" class="search-input__button">Найти</button>
     </div>
+    <div class="main-checkbox" id="paginatRadio">
+        <div>
+            <div>
+                <input id="paginat-checkbox_1" name="paginat-radio" class="l" type="radio" value="show">
+                <label for="paginat-checkbox_1">Подгрузка</label>
+            </div>
+            <div>
+                <input id="paginat-checkbox_2" name="paginat-radio" class="l" type="radio" value="paginat">
+                <label for="paginat-checkbox_2">По страницам</label>
+            </div>
+        </div>
+    </div>
     <div class="list" id="list">
         <div id="listItem" class="listItem"></div>
         <button id="showMoreButton" class="showMoreButton">show More</button>
+        <div id="pagination" class="pagination"></div>
     </div>
     <div id="listfavorits" class="list-favorits close-radio">
         <h2>Favorits</h2>
