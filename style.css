@@ -160,7 +160,7 @@ h5 {
   justify-content: space-around;
   padding: 0;
   margin: 10px;
-  flex-direction: row;
+  flex-direction: column;
 }
 .list-favorits h2 {
   text-align: center;
@@ -313,4 +313,14 @@ main {
 
 .close-radio {
   display: none;
+}
+.showMoreButton {
+  align-self: center;
+  font-size: 150%;
+  cursor: pointer;
+  margin: auto;
+  width: 100%;
+  padding: 0;
+  align-self: flex-end;
+  background-color: blue;
 }

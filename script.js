@@ -16,6 +16,7 @@ document.getElementById("showMoreButton").addEventListener("click", showMore);
 
 const inputTextSearch = document.getElementById("inputText");
 const listItem = document.getElementById("listItem");
+const list = document.getElementById("list");
 const modalItem = document.getElementById("myModal");
 const modalWindow = document.getElementById("md-w");
 const favorits = document.getElementById("favorits");
@@ -39,8 +40,8 @@ function updateRario(event) {
     listFavorits.classList.add("close-radio");
   } else listFavorits.classList.remove("close-radio");
   if (target.value == "favorits") {
-    listItem.classList.add("close-radio");
-  } else listItem.classList.remove("close-radio");
+    list.classList.add("close-radio");
+  } else list.classList.remove("close-radio");
 }
 
 function loadingData() {
@@ -199,6 +200,7 @@ function addItem(key, img_url, summary, price_formatted, title, keywords) {
   todoItem.appendChild(divContent);
   todoItem.appendChild(MoreDetailedButton);
   listItem.appendChild(todoItem);
+
 }
 
 function loadItem(itemList) {
