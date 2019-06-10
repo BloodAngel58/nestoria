@@ -3,7 +3,7 @@ let arrList = [];
 let arrFavorit = [];
 let strNumber = "";
 const size = 50;
-let sizePage = 10;
+let sizePage = 3;
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const url =
   "https://api.nestoria.co.uk/api?encoding=json&pretty=1&action=search_listings&country=uk&listing_type=buy&place_name=";
@@ -44,22 +44,21 @@ function pageFlipping(event) {
       let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
       arrList.length = 0;
       searchData(urlNewPage);
+      if (+target.innerHTML > 3 && +target.innerHTML <= 48) {
+        myPagination(+target.innerHTML);
+        //activeButton();
+      }
     }
+
     activeButton();
     target.classList.add("active");
   }
 }
 function returnButton() {
-  if (sizePage > 10) {
-    sizePage -= 10;
-    myPagination(sizePage);
-  }
+  myPagination(3);
 }
 function addButton() {
-  if (sizePage < 50) {
-    sizePage += 10;
-    myPagination(sizePage);
-  }
+  myPagination(48);
 }
 
 function showMore(event) {
@@ -324,34 +323,23 @@ function addModalItem(item, key) {
 function myPagination(Page) {
   strNumber = "";
   outStrNumber.innerHTML = "";
-  const oneNumberButton = document.createElement("button");
-  const lastNumberButton = document.createElement("button");
-  const ellipsis = document.createElement("div");
   //
-  ellipsis.classList.add("ellipsis");
-  oneNumberButton.classList.add("btn-number");
-  lastNumberButton.classList.add("btn-number");
-  //
-  oneNumberButton.innerHTML = "1";
-  lastNumberButton.innerHTML = "50";
-  ellipsis.innerHTML = "...";
-  strNumber += "<div class=ellipsis btn-number>" + "..." + "</div>";
-  for (let i = Page - 10; i < Page; i++)
+  console.log(Page);
+  for (let i = Page - 3; i < Page + 2; i++)
     strNumber += "<button class=btn-number>" + (i + 1) + "</button>";
   outStrNumber.innerHTML += strNumber;
   //
-  outStrNumber.insertBefore(oneNumberButton, outStrNumber.firstChild);
-  outStrNumber.appendChild(ellipsis);
-  outStrNumber.appendChild(lastNumberButton);
 }
 myPagination(sizePage);
 
 function activeButton() {
   const divFather = document.getElementById("out-str");
   const childrenButton = divFather.getElementsByClassName("btn-number");
+  console.log(childrenButton);
   for (let i = 0; i < childrenButton.length; i++) {
     childrenButton[i].addEventListener("click", function() {
       let current = document.getElementsByClassName("active");
+      console.log(childrenButton);
       current[0].className = current[0].className.replace(" active", "");
       this.className += " active";
     });
