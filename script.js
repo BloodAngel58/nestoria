@@ -1,6 +1,9 @@
 let arr = [];
-let arrList = []
+let arrList = [];
 let arrFavorit = [];
+let strNumber = "";
+const size = 50;
+let sizePage = 10;
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const url =
   "https://api.nestoria.co.uk/api?encoding=json&pretty=1&action=search_listings&country=uk&listing_type=buy&place_name=";
@@ -13,8 +16,15 @@ document.getElementById("favorits").addEventListener("click", deletetFavorit);
 document.getElementById("favorits").addEventListener("click", loadFavoritItem);
 document.getElementById("main").addEventListener("click", updateRario);
 document.getElementById("showMoreButton").addEventListener("click", showMore);
-document.getElementById("pagination").addEventListener("click", pagination)
-document.getElementById("paginatRadio").addEventListener("click", updatePagination);
+document.getElementById("pagination").addEventListener("click", pagination);
+document
+  .getElementById("paginatRadio")
+  .addEventListener("click", updatePagination);
+document
+  .getElementById("list-str_number")
+  .addEventListener("click", pageFlipping);
+document.getElementById("returnButton").addEventListener("click", returnButton);
+document.getElementById("addButton").addEventListener("click", addButton);
 
 const inputTextSearch = document.getElementById("inputText");
 const listItem = document.getElementById("listItem");
@@ -23,8 +33,34 @@ const modalItem = document.getElementById("myModal");
 const modalWindow = document.getElementById("md-w");
 const favorits = document.getElementById("favorits");
 const listFavorits = document.getElementById("listfavorits");
-const showMoreButton = document.getElementById("showMoreButton")
-const paginationList = document.getElementById("pagination");
+const showMoreButton = document.getElementById("showMoreButton");
+const outStrNumber = document.getElementById("out-str");
+
+function pageFlipping(event) {
+  const target = event.target;
+  if (target.tagName == "BUTTON" && target.type == "submit") {
+    if (target.innerHTML) {
+      let pageNumber = "&page=" + target.innerHTML;
+      let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+      arrList.length = 0;
+      searchData(urlNewPage);
+    }
+    activeButton();
+    target.classList.add("active");
+  }
+}
+function returnButton() {
+  if (sizePage > 10) {
+    sizePage -= 10;
+    myPagination(sizePage);
+  }
+}
+function addButton() {
+  if (sizePage < 50) {
+    sizePage += 10;
+    myPagination(sizePage);
+  }
+}
 
 function showMore(event) {
   event.preventDefault();
@@ -44,11 +80,9 @@ function pagination(event) {
     arrList.length = 0;
     searchData(urlNewPage);
   }
-
 }
 
 function updateRario(event) {
-
   const target = event.target;
   if (target.value == "Search") {
     listFavorits.classList.add("close-radio");
@@ -78,19 +112,19 @@ function loadingData() {
 
 function searchData(url) {
   fetch(url, {
-      method: "GET",
-      headers: "Access-Control-Allow-Origin",
-      headers: {
-        "content-type": "application/json"
-      },
-      mode: "cors"
-    })
+    method: "GET",
+    headers: "Access-Control-Allow-Origin",
+    headers: {
+      "content-type": "application/json"
+    },
+    mode: "cors"
+  })
     .then(res => res.json())
     .then(res => {
       arr = res.response.listings.slice();
       arr.forEach(element => {
         arrList.push(element);
-      })
+      });
       listItem.innerHTML = "";
       loadItem(arrList);
     })
@@ -108,7 +142,7 @@ function updatCheck(event) {
 function loadFavoritItem(event) {
   const target = event.target;
   let key = target.parentNode.getAttribute("key");
-  if (target.tagName == 'IMG') {
+  if (target.tagName == "IMG") {
     addModalItem(arrFavorit[key], key);
     document.querySelector(".favorit-button").classList.add("close__button");
   }
@@ -123,7 +157,6 @@ function deletetFavorit(event) {
     loadFavorit();
   }
 }
-
 
 function deletetCheck(event) {
   const target = event.target;
@@ -224,11 +257,9 @@ function addItem(key, img_url, summary, price_formatted, title, keywords) {
   todoItem.appendChild(divContent);
   todoItem.appendChild(MoreDetailedButton);
   listItem.appendChild(todoItem);
-
 }
 
 function loadItem(itemList) {
-
   for (let key = 0; key < itemList.length; key++) {
     addItem(
       key,
@@ -290,112 +321,39 @@ function addModalItem(item, key) {
   modalItem.appendChild(exitButton);
 }
 
-const Pagination = {
+function myPagination(Page) {
+  strNumber = "";
+  outStrNumber.innerHTML = "";
+  const oneNumberButton = document.createElement("button");
+  const lastNumberButton = document.createElement("button");
+  const ellipsis = document.createElement("div");
+  //
+  ellipsis.classList.add("ellipsis");
+  oneNumberButton.classList.add("btn-number");
+  lastNumberButton.classList.add("btn-number");
+  //
+  oneNumberButton.innerHTML = "1";
+  lastNumberButton.innerHTML = "50";
+  ellipsis.innerHTML = "...";
+  strNumber += "<div class=ellipsis btn-number>" + "..." + "</div>";
+  for (let i = Page - 10; i < Page; i++)
+    strNumber += "<button class=btn-number>" + (i + 1) + "</button>";
+  outStrNumber.innerHTML += strNumber;
+  //
+  outStrNumber.insertBefore(oneNumberButton, outStrNumber.firstChild);
+  outStrNumber.appendChild(ellipsis);
+  outStrNumber.appendChild(lastNumberButton);
+}
+myPagination(sizePage);
 
-  code: '',
-
-  Extend: function (data) {
-    data = data || {};
-    Pagination.size = data.size || 300;
-    Pagination.page = data.page || 1;
-    Pagination.step = data.step || 3;
-  },
-
-  Add: function (s, f) {
-    for (var i = s; i < f; i++) {
-      Pagination.code += '<a>' + i + '</a>';
-    }
-  },
-
-  Last: function () {
-    Pagination.code += '<i>...</i><a>' + Pagination.size + '</a>';
-  },
-
-  First: function () {
-    Pagination.code += '<a>1</a><i>...</i>';
-  },
-
-  Click: function () {
-    Pagination.page = +this.innerHTML;
-    Pagination.Start();
-  },
-
-  // previous page
-  Prev: function () {
-    Pagination.page--;
-    if (Pagination.page < 1) {
-      Pagination.page = 1;
-    }
-    Pagination.Start();
-  },
-
-  // next page
-  Next: function () {
-    Pagination.page++;
-    if (Pagination.page > Pagination.size) {
-      Pagination.page = Pagination.size;
-    }
-    Pagination.Start();
-  },
-
-  Bind: function () {
-    var a = Pagination.e.getElementsByTagName('a');
-    for (var i = 0; i < a.length; i++) {
-      if (+a[i].innerHTML === Pagination.page) a[i].className = 'current';
-      a[i].addEventListener('click', Pagination.Click, false);
-    }
-  },
-
-  Finish: function () {
-    Pagination.e.innerHTML = Pagination.code;
-    Pagination.code = '';
-    Pagination.Bind();
-  },
-
-  Start: function () {
-    if (Pagination.size < Pagination.step * 2 + 6) {
-      Pagination.Add(1, Pagination.size + 1);
-    } else if (Pagination.page < Pagination.step * 2 + 1) {
-      Pagination.Add(1, Pagination.step * 2 + 4);
-      Pagination.Last();
-    } else if (Pagination.page > Pagination.size - Pagination.step * 2) {
-      Pagination.First();
-      Pagination.Add(Pagination.size - Pagination.step * 2 - 2, Pagination.size + 1);
-    } else {
-      Pagination.First();
-      Pagination.Add(Pagination.page - Pagination.step, Pagination.page + Pagination.step + 1);
-      Pagination.Last();
-    }
-    Pagination.Finish();
-  },
-  Buttons: function (e) {
-    var nav = e.getElementsByTagName('a');
-    nav[0].addEventListener('click', Pagination.Prev, false);
-    nav[1].addEventListener('click', Pagination.Next, false);
-  },
-  Create: function (e) {
-    var html = [
-      '<a>&#9668;</a>', // previous button
-      '<span></span>', // pagination container
-      '<a>&#9658;</a>' // next button
-    ];
-    e.innerHTML = html.join('');
-    Pagination.e = e.getElementsByTagName('span')[0];
-    Pagination.Buttons(e);
-  },
-
-  Init: function (e, data) {
-    Pagination.Extend(data);
-    Pagination.Create(e);
-    Pagination.Start();
+function activeButton() {
+  const divFather = document.getElementById("out-str");
+  const childrenButton = divFather.getElementsByClassName("btn-number");
+  for (let i = 0; i < childrenButton.length; i++) {
+    childrenButton[i].addEventListener("click", function() {
+      let current = document.getElementsByClassName("active");
+      current[0].className = current[0].className.replace(" active", "");
+      this.className += " active";
+    });
   }
-};
-
-var init = function () {
-  Pagination.Init(document.getElementById('pagination'), {
-    size: 50,
-    page: 1,
-    step: 3
-  });
-};
-document.addEventListener('DOMContentLoaded', init, false);
+}
