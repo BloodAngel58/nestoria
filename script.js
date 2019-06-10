@@ -325,8 +325,13 @@ function myPagination(Page) {
   outStrNumber.innerHTML = "";
   //
   console.log(Page);
-  for (let i = Page - 3; i < Page + 2; i++)
-    strNumber += "<button class=btn-number>" + (i + 1) + "</button>";
+  for (let i = Page - 3; i < Page + 2; i++) {
+    if (i == Page - 1) {
+      strNumber += "<button class=btn-number active>" + (i + 1) + "</button>";
+    } else {
+      strNumber += "<button class=btn-number>" + (i + 1) + "</button>";
+    }
+  }
   outStrNumber.innerHTML += strNumber;
   //
 }
@@ -334,12 +339,11 @@ myPagination(sizePage);
 
 function activeButton() {
   const divFather = document.getElementById("out-str");
-  const childrenButton = divFather.getElementsByClassName("btn-number");
-  console.log(childrenButton);
+  let childrenButton = divFather.getElementsByClassName("btn-number");
   for (let i = 0; i < childrenButton.length; i++) {
     childrenButton[i].addEventListener("click", function() {
       let current = document.getElementsByClassName("active");
-      console.log(childrenButton);
+      console.log(current);
       current[0].className = current[0].className.replace(" active", "");
       this.className += " active";
     });
