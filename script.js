@@ -1,7 +1,7 @@
 let arr = [];
 let arrList = [];
 let arrFavorit = [];
-//let strNumber = "";
+let total_pages = 0;
 const size = 50;
 let sizePage = 1;
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
@@ -35,6 +35,7 @@ const favorits = document.getElementById("favorits");
 const listFavorits = document.getElementById("listfavorits");
 const showMoreButton = document.getElementById("showMoreButton");
 const outStrNumber = document.getElementById("out-str");
+const paginationList = document.getElementById("list-str_number");
 
 function pageFlipping(event) {
   const target = event.target;
@@ -44,7 +45,7 @@ function pageFlipping(event) {
       let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
       arrList.length = 0;
       searchData(urlNewPage);
-      if (+target.innerHTML > 3 && +target.innerHTML <= 48) {
+      if (+target.innerHTML > 3 && +target.innerHTML <= total_pages - 1) {
         myPagination(+target.innerHTML);
       }
     }
@@ -53,11 +54,13 @@ function pageFlipping(event) {
     target.classList.add("active");
   }
 }
+
 function returnButton() {
   myPagination(1);
 }
+
 function addButton() {
-  myPagination(50);
+  myPagination(total_pages - 2);
 }
 
 function showMore(event) {
@@ -124,6 +127,9 @@ function searchData(url) {
       arr.forEach(element => {
         arrList.push(element);
       });
+      if (res.response.total_pages > 100) {
+        total_pages = 100;
+      } else total_pages = res.response.total_pages;
       listItem.innerHTML = "";
       loadItem(arrList);
     })
@@ -320,33 +326,48 @@ function addModalItem(item, key) {
   modalItem.appendChild(exitButton);
 }
 
+function myPaginationStart() {
+  let strNumber = "";
+  outStrNumber.innerHTML = "";
+  if (total_pages > 5) {
+    for (let i = 0; i < 5; i++)
+      strNumber += `<button class="btn-number">${i + 1}</button>`;
+  } else
+    for (let i = 0; i < total_pages; i++)
+      strNumber += `<button class="btn-number">${i + 1}</button>`;
+
+  outStrNumber.innerHTML += strNumber;
+}
+
 function myPagination(Page) {
   let strNumber = "";
   outStrNumber.innerHTML = "";
   let active = "";
   //
-  if (Page == 1) {
-    for (let i = Page - 1; i < Page + 4; i++) {
+  if (total_pages <= 5) {
+    for (let i = 0; i < Page; i++)
       strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
-    }
-  } else if (Page == 50) {
-    for (let i = Page - 5; i < Page; i++) {
-      //if (i == Page - 1) active = "";
-
-      strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
-    }
-  } else
-    for (let i = Page - 3; i < Page + 2; i++) {
-      if (i == Page - 1) {
-        active = "active";
-      } else {
-        active = "";
+  } else {
+    if (Page == 1) {
+      for (let i = Page - 1; i < Page + 4; i++) {
+        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
       }
-      strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
-    }
+    } else if (Page - 1 == total_pages) {
+      for (let i = Page - 5; i < Page; i++) {
+        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+      }
+    } else
+      for (let i = Page - 3; i < Page + 2; i++) {
+        if (i == Page - 1) {
+          active = "active";
+        } else {
+          active = "";
+        }
+        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+      }
+  }
   outStrNumber.innerHTML += strNumber;
 }
-myPagination(sizePage);
 
 function activeButton() {
   const divFather = document.getElementById("out-str");
