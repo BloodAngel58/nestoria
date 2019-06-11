@@ -326,16 +326,11 @@ function myPagination(Page) {
   //
   if (Page == 1) {
     for (let i = Page - 1; i < Page + 4; i++) {
-      if (i == 0) {
-        active = "active";
-      } else {
-        active = "";
-      }
       strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
     }
   } else if (Page == 50) {
     for (let i = Page - 5; i < Page; i++) {
-      if (i == Page - 1) active = "";
+      //if (i == Page - 1) active = "";
 
       strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
     }
