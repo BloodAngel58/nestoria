@@ -1,9 +1,9 @@
 let arr = [];
 let arrList = [];
 let arrFavorit = [];
-let strNumber = "";
+//let strNumber = "";
 const size = 50;
-let sizePage = 3;
+let sizePage = 1;
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const url =
   "https://api.nestoria.co.uk/api?encoding=json&pretty=1&action=search_listings&country=uk&listing_type=buy&place_name=";
@@ -46,7 +46,6 @@ function pageFlipping(event) {
       searchData(urlNewPage);
       if (+target.innerHTML > 3 && +target.innerHTML <= 48) {
         myPagination(+target.innerHTML);
-        //activeButton();
       }
     }
 
@@ -55,10 +54,10 @@ function pageFlipping(event) {
   }
 }
 function returnButton() {
-  myPagination(3);
+  myPagination(1);
 }
 function addButton() {
-  myPagination(48);
+  myPagination(50);
 }
 
 function showMore(event) {
@@ -321,19 +320,35 @@ function addModalItem(item, key) {
 }
 
 function myPagination(Page) {
-  strNumber = "";
+  let strNumber = "";
   outStrNumber.innerHTML = "";
+  let active = "";
   //
-  console.log(Page);
-  for (let i = Page - 3; i < Page + 2; i++) {
-    if (i == Page - 1) {
-      strNumber += "<button class=btn-number active>" + (i + 1) + "</button>";
-    } else {
-      strNumber += "<button class=btn-number>" + (i + 1) + "</button>";
+  if (Page == 1) {
+    for (let i = Page - 1; i < Page + 4; i++) {
+      if (i == 0) {
+        active = "active";
+      } else {
+        active = "";
+      }
+      strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
     }
-  }
+  } else if (Page == 50) {
+    for (let i = Page - 5; i < Page; i++) {
+      if (i == Page - 1) active = "";
+
+      strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+    }
+  } else
+    for (let i = Page - 3; i < Page + 2; i++) {
+      if (i == Page - 1) {
+        active = "active";
+      } else {
+        active = "";
+      }
+      strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+    }
   outStrNumber.innerHTML += strNumber;
-  //
 }
 myPagination(sizePage);
 
@@ -343,7 +358,6 @@ function activeButton() {
   for (let i = 0; i < childrenButton.length; i++) {
     childrenButton[i].addEventListener("click", function() {
       let current = document.getElementsByClassName("active");
-      console.log(current);
       current[0].className = current[0].className.replace(" active", "");
       this.className += " active";
     });
