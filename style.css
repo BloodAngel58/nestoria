@@ -371,6 +371,7 @@ main {
 .btn-number:hover {
   background-color: #666;
   color: white;
+  cursor: pointer;
 }
 
 .str_number_column-2 {

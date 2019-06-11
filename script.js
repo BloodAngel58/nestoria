@@ -102,6 +102,7 @@ function updatePagination(event) {
 
 function loadingData() {
   let textSearch = inputTextSearch.value;
+  arrList.length = 0;
   if (inputTextSearch.value) {
     let finalUrl = proxyurl + url + textSearch;
     searchData(finalUrl);
