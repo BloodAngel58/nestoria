@@ -45,11 +45,10 @@ function pageFlipping(event) {
       let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
       arrList.length = 0;
       searchData(urlNewPage);
-      if (+target.innerHTML > 3 && +target.innerHTML <= total_pages - 1) {
+      if (+target.innerHTML > 2 && +target.innerHTML <= total_pages - 1) {
         myPagination(+target.innerHTML);
       }
     }
-
     activeButton();
     target.classList.add("active");
   }
@@ -60,7 +59,9 @@ function returnButton() {
 }
 
 function addButton() {
-  myPagination(total_pages - 2);
+  if (total_pages > 5) {
+    myPagination(total_pages - 2);
+  }
 }
 
 function showMore(event) {
@@ -108,11 +109,21 @@ function loadingData() {
   arrList.length = 0;
   if (inputTextSearch.value) {
     let finalUrl = proxyurl + url + textSearch;
-    searchData(finalUrl);
+    searchData(finalUrl, function myPaginationStart() {
+      let strNumber = "";
+      outStrNumber.innerHTML = "";
+      console.log(total_pages);
+      if (total_pages > 5) {
+        for (let i = 0; i < 5; i++)
+          strNumber += `<button class="btn-number">${i + 1}</button>`;
+      } else for (let i = 0; i < total_pages; i++) strNumber += `<button class="btn-number">${i + 1}</button>`;
+
+      outStrNumber.innerHTML += strNumber;
+    });
   } else alert("Вы не ввели данные для поиска");
 }
 
-function searchData(url) {
+function searchData(url, calback) {
   fetch(url, {
     method: "GET",
     headers: "Access-Control-Allow-Origin",
@@ -132,6 +143,7 @@ function searchData(url) {
       } else total_pages = res.response.total_pages;
       listItem.innerHTML = "";
       loadItem(arrList);
+      calback();
     })
     .catch(error => console.log(error));
 }
@@ -329,6 +341,7 @@ function addModalItem(item, key) {
 function myPaginationStart() {
   let strNumber = "";
   outStrNumber.innerHTML = "";
+  console.log(total_pages);
   if (total_pages > 5) {
     for (let i = 0; i < 5; i++)
       strNumber += `<button class="btn-number">${i + 1}</button>`;
