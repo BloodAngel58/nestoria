@@ -45,7 +45,7 @@ function pageFlipping(event) {
       let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
       arrList.length = 0;
       searchData(urlNewPage);
-      if (+target.innerHTML > 2 && +target.innerHTML <= total_pages - 1) {
+      if (+target.innerHTML > 2 && +target.innerHTML < total_pages - 1) {
         myPagination(+target.innerHTML);
       }
     }
@@ -60,7 +60,7 @@ function returnButton() {
 
 function addButton() {
   if (total_pages > 5) {
-    myPagination(total_pages - 2);
+    myPagination(total_pages);
   }
 }
 
@@ -109,17 +109,7 @@ function loadingData() {
   arrList.length = 0;
   if (inputTextSearch.value) {
     let finalUrl = proxyurl + url + textSearch;
-    searchData(finalUrl, function myPaginationStart() {
-      let strNumber = "";
-      outStrNumber.innerHTML = "";
-      console.log(total_pages);
-      if (total_pages > 5) {
-        for (let i = 0; i < 5; i++)
-          strNumber += `<button class="btn-number">${i + 1}</button>`;
-      } else for (let i = 0; i < total_pages; i++) strNumber += `<button class="btn-number">${i + 1}</button>`;
-
-      outStrNumber.innerHTML += strNumber;
-    });
+    searchData(finalUrl, myPaginationStart);
   } else alert("Вы не ввели данные для поиска");
 }
 
@@ -143,7 +133,7 @@ function searchData(url, calback) {
       } else total_pages = res.response.total_pages;
       listItem.innerHTML = "";
       loadItem(arrList);
-      calback();
+      if (calback) calback();
     })
     .catch(error => console.log(error));
 }
@@ -338,7 +328,7 @@ function addModalItem(item, key) {
   modalItem.appendChild(exitButton);
 }
 
-function myPaginationStart() {
+myPaginationStart = function() {
   let strNumber = "";
   outStrNumber.innerHTML = "";
   console.log(total_pages);
@@ -350,7 +340,7 @@ function myPaginationStart() {
       strNumber += `<button class="btn-number">${i + 1}</button>`;
 
   outStrNumber.innerHTML += strNumber;
-}
+};
 
 function myPagination(Page) {
   let strNumber = "";
@@ -365,9 +355,9 @@ function myPagination(Page) {
       for (let i = Page - 1; i < Page + 4; i++) {
         strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
       }
-    } else if (Page - 1 == total_pages) {
-      for (let i = Page - 5; i < Page; i++) {
-        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+    } else if (Page == total_pages) {
+      for (let i = total_pages - 5; i < total_pages; i++) {
+        strNumber += `<button class="btn-number">${i + 1}</button>`;
       }
     } else
       for (let i = Page - 3; i < Page + 2; i++) {
