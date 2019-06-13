@@ -55,11 +55,19 @@ function pageFlipping(event) {
 }
 
 function returnButton() {
+  let pageNumber = "&page=" + 1;
+  let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+  arrList.length = 0;
+  searchData(urlNewPage);
   myPagination(1);
 }
 
 function addButton() {
   if (total_pages > 5) {
+    let pageNumber = "&page=" + total_pages;
+    let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+    arrList.length = 0;
+    searchData(urlNewPage);
     myPagination(total_pages);
   }
 }
@@ -353,11 +361,21 @@ function myPagination(Page) {
   } else {
     if (Page == 1) {
       for (let i = Page - 1; i < Page + 4; i++) {
+        if (i == Page - 1) {
+          active = "active";
+        } else {
+          active = "";
+        }
         strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
       }
     } else if (Page == total_pages) {
       for (let i = total_pages - 5; i < total_pages; i++) {
-        strNumber += `<button class="btn-number">${i + 1}</button>`;
+        if (i == Page - 1) {
+          active = "active";
+        } else {
+          active = "";
+        }
+        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
       }
     } else
       for (let i = Page - 3; i < Page + 2; i++) {
