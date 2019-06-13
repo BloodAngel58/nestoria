@@ -1,54 +1,147 @@
 let arr = [];
+let arrList = [];
 let arrFavorit = [];
+let total_pages = 0;
+const size = 50;
+let sizePage = 1;
 const proxyurl = "https://cors-anywhere.herokuapp.com/";
 const url =
   "https://api.nestoria.co.uk/api?encoding=json&pretty=1&action=search_listings&country=uk&listing_type=buy&place_name=";
+let pagesCount = 1;
+
 document.getElementById("listItem").addEventListener("click", updatCheck, true);
 document.getElementById("buttonSearch").addEventListener("click", loadingData);
 document.getElementById("myModal").addEventListener("click", deletetCheck);
 document.getElementById("favorits").addEventListener("click", deletetFavorit);
 document.getElementById("favorits").addEventListener("click", loadFavoritItem);
 document.getElementById("main").addEventListener("click", updateRario);
+document.getElementById("showMoreButton").addEventListener("click", showMore);
+document.getElementById("pagination").addEventListener("click", pagination);
+document
+  .getElementById("paginatRadio")
+  .addEventListener("click", updatePagination);
+document
+  .getElementById("list-str_number")
+  .addEventListener("click", pageFlipping);
+document.getElementById("returnButton").addEventListener("click", returnButton);
+document.getElementById("addButton").addEventListener("click", addButton);
 
 const inputTextSearch = document.getElementById("inputText");
 const listItem = document.getElementById("listItem");
+const list = document.getElementById("list");
 const modalItem = document.getElementById("myModal");
 const modalWindow = document.getElementById("md-w");
 const favorits = document.getElementById("favorits");
 const listFavorits = document.getElementById("listfavorits");
+const showMoreButton = document.getElementById("showMoreButton");
+const outStrNumber = document.getElementById("out-str");
+const paginationList = document.getElementById("list-str_number");
+
+function pageFlipping(event) {
+  const target = event.target;
+  if (target.tagName == "BUTTON" && target.type == "submit") {
+    if (target.innerHTML) {
+      let pageNumber = "&page=" + target.innerHTML;
+      let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+      arrList.length = 0;
+      searchData(urlNewPage);
+      if (+target.innerHTML > 2 && +target.innerHTML < total_pages - 1) {
+        myPagination(+target.innerHTML);
+      }
+    }
+    activeButton();
+    target.classList.add("active");
+  }
+}
+
+function returnButton() {
+  let pageNumber = "&page=" + 1;
+  let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+  arrList.length = 0;
+  searchData(urlNewPage);
+  myPagination(1);
+}
+
+function addButton() {
+  if (total_pages > 5) {
+    let pageNumber = "&page=" + total_pages;
+    let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+    arrList.length = 0;
+    searchData(urlNewPage);
+    myPagination(total_pages);
+  }
+}
+
+function showMore(event) {
+  event.preventDefault();
+  pagesCount++;
+  if (pagesCount) {
+    let pageNumber = "&page=" + pagesCount;
+    let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+    searchData(urlNewPage);
+  }
+}
+
+function pagination(event) {
+  const target = event.target;
+  if (target.innerHTML) {
+    let pageNumber = "&page=" + target.innerHTML;
+    let urlNewPage = proxyurl + url + inputTextSearch.value + pageNumber;
+    arrList.length = 0;
+    searchData(urlNewPage);
+  }
+}
 
 function updateRario(event) {
-
   const target = event.target;
   if (target.value == "Search") {
     listFavorits.classList.add("close-radio");
   } else listFavorits.classList.remove("close-radio");
   if (target.value == "favorits") {
-    listItem.classList.add("close-radio");
-  } else listItem.classList.remove("close-radio");
+    list.classList.add("close-radio");
+  } else list.classList.remove("close-radio");
+}
+
+function updatePagination(event) {
+  const target = event.target;
+  if (target.value == "paginat") {
+    showMoreButton.classList.add("close-radio");
+  } else showMoreButton.classList.remove("close-radio");
+  if (target.value == "show") {
+    paginationList.classList.add("close-radio");
+  } else paginationList.classList.remove("close-radio");
 }
 
 function loadingData() {
   let textSearch = inputTextSearch.value;
+  arrList.length = 0;
   if (inputTextSearch.value) {
     let finalUrl = proxyurl + url + textSearch;
-    searchData(finalUrl);
+    searchData(finalUrl, myPaginationStart);
   } else alert("Вы не ввели данные для поиска");
 }
 
-function searchData(url) {
+function searchData(url, calback) {
   fetch(url, {
-      method: "GET",
-      headers: "Access-Control-Allow-Origin",
-      headers: {
-        "content-type": "application/json"
-      },
-      mode: "cors"
-    })
+    method: "GET",
+    headers: "Access-Control-Allow-Origin",
+    headers: {
+      "content-type": "application/json"
+    },
+    mode: "cors"
+  })
     .then(res => res.json())
     .then(res => {
       arr = res.response.listings.slice();
-      loadItem(arr);
+      arr.forEach(element => {
+        arrList.push(element);
+      });
+      if (res.response.total_pages > 100) {
+        total_pages = 100;
+      } else total_pages = res.response.total_pages;
+      listItem.innerHTML = "";
+      loadItem(arrList);
+      if (calback) calback();
     })
     .catch(error => console.log(error));
 }
@@ -57,14 +150,14 @@ function updatCheck(event) {
   const target = event.target;
   if (target.type == "submit") {
     let key = target.parentNode.getAttribute("key");
-    addModalItem(arr[key], key);
+    addModalItem(arrList[key], key);
   }
 }
 
 function loadFavoritItem(event) {
   const target = event.target;
   let key = target.parentNode.getAttribute("key");
-  if (target.tagName == 'IMG') {
+  if (target.tagName == "IMG") {
     addModalItem(arrFavorit[key], key);
     document.querySelector(".favorit-button").classList.add("close__button");
   }
@@ -80,7 +173,6 @@ function deletetFavorit(event) {
   }
 }
 
-
 function deletetCheck(event) {
   const target = event.target;
   if (target.type == "reset") {
@@ -94,7 +186,7 @@ function deletetCheck(event) {
 }
 
 function addToFavorit(key) {
-  const obj = arr[key];
+  const obj = arrList[key];
   if (!arrFavorit.includes(obj)) {
     arrFavorit.push(obj);
     favorits.innerHTML = "";
@@ -243,4 +335,69 @@ function addModalItem(item, key) {
   modalItem.appendChild(divContent);
   modalItem.appendChild(exitButton);
 }
-//background-color: rgba(101, 172, 20, 0.65);
+
+myPaginationStart = function() {
+  let strNumber = "";
+  outStrNumber.innerHTML = "";
+  console.log(total_pages);
+  if (total_pages > 5) {
+    for (let i = 0; i < 5; i++)
+      strNumber += `<button class="btn-number">${i + 1}</button>`;
+  } else
+    for (let i = 0; i < total_pages; i++)
+      strNumber += `<button class="btn-number">${i + 1}</button>`;
+
+  outStrNumber.innerHTML += strNumber;
+};
+
+function myPagination(Page) {
+  let strNumber = "";
+  outStrNumber.innerHTML = "";
+  let active = "";
+  //
+  if (total_pages <= 5) {
+    for (let i = 0; i < Page; i++)
+      strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+  } else {
+    if (Page == 1) {
+      for (let i = Page - 1; i < Page + 4; i++) {
+        if (i == Page - 1) {
+          active = "active";
+        } else {
+          active = "";
+        }
+        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+      }
+    } else if (Page == total_pages) {
+      for (let i = total_pages - 5; i < total_pages; i++) {
+        if (i == Page - 1) {
+          active = "active";
+        } else {
+          active = "";
+        }
+        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+      }
+    } else
+      for (let i = Page - 3; i < Page + 2; i++) {
+        if (i == Page - 1) {
+          active = "active";
+        } else {
+          active = "";
+        }
+        strNumber += `<button class="btn-number ${active}">${i + 1}</button>`;
+      }
+  }
+  outStrNumber.innerHTML += strNumber;
+}
+
+function activeButton() {
+  const divFather = document.getElementById("out-str");
+  let childrenButton = divFather.getElementsByClassName("btn-number");
+  for (let i = 0; i < childrenButton.length; i++) {
+    childrenButton[i].addEventListener("click", function() {
+      let current = document.getElementsByClassName("active");
+      current[0].className = current[0].className.replace(" active", "");
+      this.className += " active";
+    });
+  }
+}
